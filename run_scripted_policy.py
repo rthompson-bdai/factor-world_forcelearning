@@ -15,7 +15,7 @@
 from wrappers import make_wrapped_env
 from wrappers import MetaWorldState
 from third_party.metaworld.metaworld import policies
-from replay_buffer import ReplayBufferStorage
+#from replay_buffer import ReplayBufferStorage
 import os
 
 # import argparse
@@ -111,6 +111,9 @@ def main(cfg):
   eval_factor_kwargs = {
       factor: cfg.env.eval_factors[factor] for factor in cfg.factors}
 
+  print(cfg.env.camera_name)
+  cfg.env.camera_name = "corner2"
+  input("??")
   # Create environment for collecting data.
   env = make_wrapped_env(
       cfg.env.env_name,
@@ -136,6 +139,9 @@ def main(cfg):
   noise = np.ones(env.action_space.shape) * cfg.policy.action_noise
   policy = POLICIES[cfg.task_name]()
 
+  # print(cfg.output_dir)
+  # print(os.getcwd())
+
   os.makedirs(cfg.output_dir, exist_ok=True)
 
   # Replay buffer output
@@ -150,13 +156,15 @@ def main(cfg):
 
   # Video output
   video_writer = None
+  # print(cfg.mode)
+  # input("?")
   if cfg.mode in ['save_video', 'save_buffer']:
     task_str = '%s:%s' % (
         cfg.task_name,
         '-'.join(cfg.factors))
-    video_path = os.path.join(cfg.output_dir, f'video-{task_str}.avi')
+    video_path = os.path.join(cfg.output_dir, f'video-{task_str}.mp4')
     video_writer = cv2.VideoWriter(
-        video_path, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'),
+        video_path, cv2.VideoWriter_fourcc(*'MP4V'),
         env.metadata['video.frames_per_second'],
         image_obs_size)
 

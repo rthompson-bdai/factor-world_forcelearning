@@ -93,10 +93,10 @@ class SawyerBasketballEnvV2(SawyerXYZEnv):
     return self.unwrapped.model.geom_name2id('objGeom')
 
   def _get_pos_objects(self):
-    return self.get_body_com('obj')
+    return self.get_body_com('basketball')#'obj')
 
   def _get_quat_objects(self):
-    return self.sim.data.get_body_xquat('obj')
+    return self.sim.data.get_body_xquat('basketball')#'obj')
 
   def reset_model(self):
     self._reset_hand()
