@@ -61,6 +61,7 @@ class SawyerBinPickingEnvV2(SawyerXYZEnv):
     self.obj_init_pos = self.init_config['obj_init_pos']
     self.obj_init_angle = self.init_config['obj_init_angle']
     self.hand_init_pos = self.init_config['hand_init_pos']
+    self.object_name = 'bin_goal'
 
     self._target_to_obj_init = None
 

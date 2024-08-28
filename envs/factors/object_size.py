@@ -25,6 +25,16 @@ from envs.factors.factor_wrapper import FactorWrapper
 class ObjectSizeWrapper(FactorWrapper):
   """Wrapper over MuJoCo environments that modifies object size."""
 
+
+  def get_all_bodies(self, body_id):
+    rel_ids = [body_id]
+    for body in self.model.body_names:
+      id = self.model.body_name2id(body)
+      if self.model.body_parentid[id] == body_id:
+        rel_ids.append(id)
+        rel_ids += self.get_all_bodies(id)
+    return list(set(rel_ids))
+
   def __init__(self,
                env: gym.Env,
                scale_range: Tuple[float, float] = (0.4, 1.4),
@@ -41,18 +51,30 @@ class ObjectSizeWrapper(FactorWrapper):
                                 seed=seed),
         **kwargs)
 
-    # Store default values
-    if constants.OBJECT_BODY_NAME in self.model.body_names:
-      obj_body_id = self.model._body_name2id[constants.OBJECT_BODY_NAME]
+    if not hasattr(self, 'object_name'):
+      obj_body_id = self.model._body_name2id['obj']
       self._geom_id2size = {
-          geom_id: self.model.geom_size[geom_id].copy()
-          for geom_id, body_id in enumerate(self.model.geom_bodyid)
-          if body_id == obj_body_id
-      }
+            geom_id: self.model.geom_size[geom_id].copy()
+            for geom_id, body_id in enumerate(self.model.geom_bodyid)
+            if body_id == obj_body_id
+        }
+      
     else:
-      print(
-          f"WARNING(object_size): {constants.OBJECT_BODY_NAME} not found. "
-          "Body names: {self.model.body_names}")
+      if self.object_name in self.model.body_names: #constants.OBJECT_BODY_NAME
+        obj_body_id = self.model._body_name2id[self.object_name]#[constants.OBJECT_BODY_NAME]
+
+        rel_ids = self.get_all_bodies(obj_body_id)
+        self._geom_id2size = {}
+        for id in rel_ids:
+          self._geom_id2size.update({
+              geom_id: self.model.geom_size[geom_id].copy()
+              for geom_id, body_id in enumerate(self.model.geom_bodyid)
+              if body_id == id
+          })
+      else:
+        print(
+            f"WARNING(object_size): {constants.OBJECT_BODY_NAME} not found. "
+            "Body names: {self.model.body_names}")
 
   @property
   def factor_name(self):
@@ -65,5 +87,8 @@ class ObjectSizeWrapper(FactorWrapper):
             "Not setting factor value.")
       return
 
-    for geom_id, geom_size in self._geom_id2size.items():
+    # value=10
+    # print(self.unwrapped.model.geom_size[46] )
+    for geom_id, geom_size in self._geom_id2size.items():      
       self.unwrapped.model.geom_size[geom_id] = geom_size * value
+    # print(self.unwrapped.model.geom_size[46] )

@@ -27,10 +27,10 @@ class ObjectPosWrapper(FactorWrapper):
 
   def __init__(self,
                env: gym.Env,
-               x_range: Tuple[float, float] = (-0.3, 0.3),
-               y_range: Tuple[float, float] = (-0.1, 0.2),
+               x_range: Tuple[float, float] = (-0., 0.),
+               y_range: Tuple[float, float] = (-0.0, 0.0),
                z_range: Tuple[float, float] = (-0, 0),
-               theta_range: Tuple[float, float] = (0, 2 * np.pi),
+               theta_range: Tuple[float, float] = (0, 0.0), # 2 * np.pi),
                seed: int = None,
                **kwargs):
     """Creates a new wrapper."""
@@ -45,33 +45,46 @@ class ObjectPosWrapper(FactorWrapper):
         **kwargs)
 
     if hasattr(self, 'object_name'):
-      joint_name = f"joint_{self.object_name}"
+      self.body_name = self.object_name
+      print(self.object_name)
+      #joint_name = f"joint_{self.object_name}"
     else:
-      joint_name = 'objjoint'
+      self.body_name = 'obj'
+      #joint_name = 'objjoint'
+    # print(dir(self.model))
+    # print(self.model.body_jntnum)
+    # print(self.model.body_jntadr[self.model.body_name2id('basketball')])
+    # exit(0)
 
-    if joint_name not in self.model.joint_names:
-      print(f"WARNING(object_pos): Joint {joint_name} not found.")
+    print(self.body_name)
+    if self.body_name not in self.model.body_names:
+      print(f"WARNING(object_pos): Body {body_name} not found.")
       self.object_init_pos = None
       self.object_init_quat = None
     else:
       # Store object qpos/qvel indices
-      self.i_qp = self.model.get_joint_qpos_addr(joint_name)[0]
-      self.i_qv = self.model.get_joint_qvel_addr(joint_name)[0]
+      # self.i_qp = self.model.get_joint_qpos_addr(joint_name)[0]
+      # self.i_qv = self.model.get_joint_qvel_addr(joint_name)[0]
 
-      qpos = self.data.qpos.flat.copy()
+      # qpos = self.data.qpos.flat.copy()
       self._default_init_pos = self.unwrapped.init_config['obj_init_pos']
-      self._default_init_quat = qpos[self.i_qp + 3:self.i_qp + 7]
+      self._default_init_quat = self.model.body_quat[self.model.body_name2id(self.body_name)]
 
       self.object_init_pos = self._default_init_pos.copy()
       self.object_init_quat = self._default_init_quat.copy()
 
   def reset(self, force_randomize_factor: bool = False):
     super().reset(force_randomize_factor=force_randomize_factor)
-
+   
     # Reset object pos.
     self._set_object_pos(
         self.object_init_pos,
         self.object_init_quat)
+
+    #print(self.model.body_pos[self.model.body_name2id(self.body_name)] )
+    #self.reset_model()
+
+    #print(self.model.body_pos[self.model.body_name2id(self.body_name)] )
 
     return self.unwrapped._get_obs()
 
@@ -86,7 +99,7 @@ class ObjectPosWrapper(FactorWrapper):
       print(
           "WARNING(object_pos): Missing _default_init_pos. Not setting factor.")
       return
-
+      
     self.object_init_pos = self.unwrapped.init_config['obj_init_pos'] + value[:3]
 
     delta_radians = value[3]
@@ -95,17 +108,24 @@ class ObjectPosWrapper(FactorWrapper):
     self.object_init_quat = Rotation.from_euler('xyz', radians).as_quat()
 
   def _set_object_pos(self, pos: np.ndarray, quat: np.ndarray):
-    if not hasattr(self, 'i_qp'):
-      print("WARNING(object_pos): Missing i_qp. Not setting object_pos.")
-      return
+    # if not hasattr(self, 'i_qp'):
+    #   print("WARNING(object_pos): Missing i_qp. Not setting object_pos.")
+    #   return
 
     assert pos.shape == (3,), pos.shape
     assert quat.shape == (4,), quat.shape
-    qpos = self.data.qpos.flat.copy()
-    qvel = self.data.qvel.flat.copy()
 
-    qpos[self.i_qp:self.i_qp + 3] = pos
-    qpos[self.i_qp + 3:self.i_qp + 7] = quat
-    qvel[self.i_qv:self.i_qv + 3] = [0, 0, 0]
+    self.unwrapped.model.body_pos[self.model.body_name2id(self.body_name)] = pos
+    self.unwrapped.model.body_quat[self.model.body_name2id(self.body_name)] = quat
 
-    self.set_state(qpos, qvel)
+    self.reset_model()
+
+    # qpos = self.data.qpos.flat.copy()
+    # qvel = self.data.qvel.flat.copy()
+
+    # qpos[self.i_qp:self.i_qp + 3] = pos
+    # qpos[self.i_qp + 3:self.i_qp + 7] = quat
+    # qvel[self.i_qv:self.i_qv + 3] = [0, 0, 0]
+
+
+    # self.set_state(qpos, qvel)

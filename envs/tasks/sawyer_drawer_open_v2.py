@@ -50,6 +50,8 @@ class SawyerDrawerOpenEnvV2(SawyerXYZEnv):
     goal_low = self.hand_low
     goal_high = self.hand_high
 
+    self.object_name = "drawer"
+
     self._random_reset_space = Box(
         np.array(obj_low),
         np.array(obj_high),
@@ -99,9 +101,10 @@ class SawyerDrawerOpenEnvV2(SawyerXYZEnv):
     self.obj_init_pos = self._get_state_rand_vec() if self.random_init \
         else self.init_config['obj_init_pos']
     # Set mujoco body to computed position
-    self.sim.model.body_pos[self.model.body_name2id(
-        'drawer'
-    )] = self.obj_init_pos
+    # self.sim.model.body_pos[self.model.body_name2id(
+    #     'drawer'
+    # )] = self.obj_init_pos
+    self.obj_init_pos = self.sim.model.body_pos[self.model.body_name2id('door')]
     # Set _target_pos to current drawer position (closed) minus an offset
     self._target_pos = self.obj_init_pos + \
         np.array([.0, -.16 - self.maxDist, .09])

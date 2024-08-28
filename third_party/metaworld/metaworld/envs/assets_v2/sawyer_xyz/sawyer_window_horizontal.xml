@@ -8,10 +8,11 @@
 
       <body name="window" pos="-0.1 0.785 0.202">
         <include file="../objects/assets/window_horiz.xml"/>
+        <site name="goal" pos="0. -.085 0.068" size="0.02"
+            rgba="0 0.8 0 1"/>
       </body>
 
-      <site name="goal" pos="0. 0.7 0.27" size="0.02"
-            rgba="0 0.8 0 1"/>
+      
     </worldbody>
 
     <actuator>

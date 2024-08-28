@@ -102,6 +102,7 @@ class MujocoEnv(gym.Env):
       self.seed(seed)
     self._did_see_sim_exception = False
     self.sim.reset()
+    
     ob = self.reset_model()
     if self.viewer is not None:
       self.viewer_setup()

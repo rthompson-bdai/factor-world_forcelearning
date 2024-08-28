@@ -90,11 +90,11 @@ class SawyerNutAssemblyEnvV2(SawyerXYZEnv):
     return self.data.site_xpos[self.model.site_name2id('RoundNut-8')]
 
   def _get_quat_objects(self):
-    return self.sim.data.get_body_xquat('obj')
+    return self.sim.data.get_body_xquat('RoundNut')
 
   def _get_obs_dict(self):
     obs_dict = super()._get_obs_dict()
-    obs_dict['state_achieved_goal'] = self.get_body_com('obj')
+    obs_dict['state_achieved_goal'] = self.get_body_com('RoundNut')
     return obs_dict
 
   def reset_model(self):

@@ -61,6 +61,8 @@ class SawyerLeverPullEnvV2(SawyerXYZEnv):
     self.hand_init_pos = self.init_config['hand_init_pos']
     self._lever_pos_init = None
 
+    self.object_name = "lever"
+
     goal_low = self.hand_low
     goal_high = self.hand_high
 
@@ -106,8 +108,10 @@ class SawyerLeverPullEnvV2(SawyerXYZEnv):
     self._reset_hand()
     self.obj_init_pos = self._get_state_rand_vec() if self.random_init \
         else self.init_config['obj_init_pos']
-    self.sim.model.body_pos[
-        self.model.body_name2id('lever')] = self.obj_init_pos
+    # self.sim.model.body_pos[
+    #     self.model.body_name2id('lever')] = self.obj_init_pos
+
+    self.obj_init_pos = self.sim.model.body_pos[self.model.body_name2id('lever')]
 
     self._lever_pos_init = self.obj_init_pos + np.array(
         [.12, -self.LEVER_RADIUS, .25]

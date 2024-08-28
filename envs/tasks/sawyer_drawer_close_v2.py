@@ -48,6 +48,7 @@ class SawyerDrawerCloseEnvV2(SawyerXYZEnv):
     self.obj_init_pos = self.init_config['obj_init_pos']
     self.obj_init_angle = self.init_config['obj_init_angle']
     self.hand_init_pos = self.init_config['hand_init_pos']
+    self.object_name = "drawer"
 
     goal_low = self.hand_low
     goal_high = self.hand_high
@@ -101,9 +102,11 @@ class SawyerDrawerCloseEnvV2(SawyerXYZEnv):
     self.obj_init_pos = self._get_state_rand_vec() if self.random_init \
         else self.init_config['obj_init_pos']
     # Set mujoco body to computed position
-    self.sim.model.body_pos[self.model.body_name2id(
-        'drawer'
-    )] = self.obj_init_pos
+    # self.sim.model.body_pos[self.model.body_name2id(
+    #     'drawer'
+    # )] = self.obj_init_pos
+
+    self.obj_init_pos = self.sim.model.body_pos[self.model.body_name2id('drawer')]
     # Set _target_pos to current drawer position (closed)
     self._target_pos = self.obj_init_pos + np.array([.0, -.16, .09])
     # Pull drawer out all the way and mark its starting position

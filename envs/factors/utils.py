@@ -67,6 +67,8 @@ def make_env_with_factors(
   # Relative path must point:
   #   from //third_party/metaworld/metaworld/envs/assets_v2/sawyer_xyz
   #   to   //envs/assets/mujoco_scanned_objects
+
+  #TODO does this break other things
   xml_path = generate_xml(
       base_xml_path,
       include_paths=["../../../../../../envs/assets/" + factors_relative_path])

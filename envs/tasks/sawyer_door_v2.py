@@ -53,6 +53,7 @@ class SawyerDoorEnvV2(SawyerXYZEnv):
     self.hand_init_pos = self.init_config['hand_init_pos']
 
     self.door_angle_idx = self.model.get_joint_qpos_addr('doorjoint')
+    self.object_name = "door"
 
     self._random_reset_space = Box(
         np.array(obj_low),
@@ -107,10 +108,12 @@ class SawyerDoorEnvV2(SawyerXYZEnv):
 
     self.obj_init_pos = self._get_state_rand_vec() if self.random_init \
         else self.init_config['obj_init_pos']
+
+    self.obj_init_pos = self.sim.model.body_pos[self.model.body_name2id('door')]
     self._target_pos = self.obj_init_pos + np.array([-0.3, -0.45, 0.])
 
-    self.sim.model.body_pos[self.model.body_name2id(
-        'door')] = self.obj_init_pos
+    # self.sim.model.body_pos[self.model.body_name2id(
+    #     'door')] = self.obj_init_pos
     self.sim.model.site_pos[self.model.site_name2id('goal')] = self._target_pos
     self._set_obj_xyz(0)
     self.maxPullDist = np.linalg.norm(self.data.get_geom_xpos('handle')[

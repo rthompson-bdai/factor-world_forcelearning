@@ -49,6 +49,7 @@ class SawyerDoorLockEnvV2(SawyerXYZEnv):
 
     goal_low = self.hand_low
     goal_high = self.hand_high
+    self.object_name = "door"
 
     self._lock_length = 0.1
 
@@ -103,8 +104,8 @@ class SawyerDoorLockEnvV2(SawyerXYZEnv):
 
     if self.random_init:
       door_pos = self._get_state_rand_vec()
-
-    self.sim.model.body_pos[self.model.body_name2id('door')] = door_pos
+    
+    #self.sim.model.body_pos[self.model.body_name2id('door')] = door_pos
     for _ in range(self.frame_skip):
       self.sim.step()
 

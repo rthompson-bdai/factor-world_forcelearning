@@ -8,10 +8,10 @@
 
       <body name="window" pos="0. 0.785 0">
         <include file="../objects/assets/window.xml"/>
+        <site name="goal" pos="0. -0.095 0.265" size="0.02"
+            rgba="0 0.8 0 1"/>
       </body>
 
-      <site name="goal" pos="0. 0.69 0.265" size="0.02"
-            rgba="0 0.8 0 1"/>
 
     </worldbody>
 

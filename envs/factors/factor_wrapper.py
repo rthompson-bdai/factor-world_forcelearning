@@ -194,7 +194,7 @@ class FactorWrapper:
     # Randomize factor.
     if force_randomize_factor or (
             self._num_resets_per_randomize and
-            self._num_resets % self._num_resets_per_randomize == 0):
+            self._num_resets % int(self._num_resets_per_randomize) == 0):
       self.randomize_factor()
 
     self._num_resets += 1

@@ -26,6 +26,7 @@ class SawyerButtonPressEnvV2(SawyerXYZEnv):
   MODEL_NAME = full_v2_path_for('sawyer_xyz/sawyer_button_press.xml')
 
   def __init__(self, model_name=MODEL_NAME, **kwargs):
+
     hand_low = (-0.5, 0.40, 0.05)
     hand_high = (0.5, 1, 0.5)
     obj_low = (-0.1, 0.85, 0.115)
@@ -47,6 +48,7 @@ class SawyerButtonPressEnvV2(SawyerXYZEnv):
     self.hand_init_pos = self.init_config['hand_init_pos']
     goal_low = self.hand_low
     goal_high = self.hand_high
+    self.object_name = 'box'
 
     self._random_reset_space = Box(
         np.array(obj_low),
@@ -106,8 +108,8 @@ class SawyerButtonPressEnvV2(SawyerXYZEnv):
       goal_pos = self._get_state_rand_vec()
       self.obj_init_pos = goal_pos
 
-    self.sim.model.body_pos[
-        self.model.body_name2id('box')] = self.obj_init_pos
+    # self.sim.model.body_pos[
+    #     self.model.body_name2id('box')] = self.obj_init_pos
     self._set_obj_xyz(0)
     self._target_pos = self._get_site_pos('hole')
 

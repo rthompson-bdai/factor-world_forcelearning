@@ -17,6 +17,11 @@
       <mesh file="../objects/meshes/xyz_base/pedestal.stl" name="pedestal"/>
     </asset>
 
+    <sensor>
+        <force name="force_ee" site="endEffector"/>
+        <torque name="torque_ee" site="endEffector"/>
+    </sensor>
+
     <default>
 
       <default class="xyz_base">

@@ -47,6 +47,8 @@ class SawyerFaucetCloseEnvV2(SawyerXYZEnv):
     self.hand_init_pos = self.init_config['hand_init_pos']
     self.obj_init_pos = self.init_config['obj_init_pos']
 
+    self.object_name = "faucetBase"
+
     goal_low = self.hand_low
     goal_high = self.hand_high
 
@@ -92,8 +94,10 @@ class SawyerFaucetCloseEnvV2(SawyerXYZEnv):
     self.obj_init_pos = self._get_state_rand_vec() if self.random_init \
         else self.init_config['obj_init_pos']
     # Set mujoco body to computed position
-    self.sim.model.body_pos[self.model.body_name2id(
-        'faucetBase')] = self.obj_init_pos
+    # self.sim.model.body_pos[self.model.body_name2id(
+    #     'faucetBase')] = self.obj_init_pos
+
+    self.obj_init_pos = self.sim.model.body_pos[self.model.body_name2id('faucetBase')]
 
     self._target_pos = self.obj_init_pos + np.array(
         [-self._handle_length, .0, .125])

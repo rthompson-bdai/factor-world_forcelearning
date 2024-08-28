@@ -49,6 +49,8 @@ class SawyerHandlePressEnvV2(SawyerXYZEnv):
     self.obj_init_pos = self.init_config['obj_init_pos']
     self.hand_init_pos = self.init_config['hand_init_pos']
 
+    self.object_name = "box"
+
     self._random_reset_space = Box(
         np.array(obj_low),
         np.array(obj_high),
@@ -100,7 +102,8 @@ class SawyerHandlePressEnvV2(SawyerXYZEnv):
                          if self.random_init
                          else self.init_config['obj_init_pos'])
 
-    self.sim.model.body_pos[self.model.body_name2id('box')] = self.obj_init_pos
+    #self.sim.model.body_pos[self.model.body_name2id('box')] = self.obj_init_pos
+    self.obj_init_pos = self.sim.model.body_pos[self.model.body_name2id('box')]
     self._set_obj_xyz(-0.001)
     self._target_pos = self._get_site_pos('goalPress')
     self.maxDist = np.abs(self.data.site_xpos[self.model.site_name2id(

@@ -20,9 +20,9 @@ output_dir: /tmp
 debug: false
 
 num_episodes: 10
-num_episodes_per_randomize: 2
+num_episodes_per_randomize: 1
 factors: [
-  # Default factors
+  # 1 factors
   'arm_pos',
   'object_pos',
   # Continuous-valued factors
@@ -48,60 +48,60 @@ env:
   image_obs_size: [84, 84]
   observe_goal: false
 
-  # Default config for factors
+  # 1 config for factors
   num_resets_per_randomize: ${num_episodes_per_randomize}
 
   # Used to sample factor values for data generation.
   factors:
-    # ----- Default factors ----- #
+    # ----- 1 factors ----- #
     arm_pos:
       x_range: [-0.5, 0.5]
       y_range: [-0.2, 0.4]
       z_range: [-0.15, 0.1]
-      num_resets_per_randomize: default
-      seed: ${seed}
-    object_pos:
-      x_range: [-0.3, 0.3]
-      y_range: [-0.1, 0.2]
-      z_range: [-0, 0]
-      theta_range: [0, 6.2831853]
       num_resets_per_randomize: 1
-      seed: ${seed}
+      seed: 2024
+    object_pos:
+      x_range: [-0.1, 0.1]
+      y_range: [-0.1, 0.1]
+      z_range: [-0, 0]
+      theta_range: [0, 0]
+      num_resets_per_randomize: 1
+      seed: 2024
     # ----- Continuous-valued factors ----- #
     camera_pos:
       azimuth_range: [1.5707963267948966, 2.356194490192345]
       inclination_range: [1.0471975511965976, 1.308996938995747]
       radius_range: [1.25, 1.75]
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     distractor_pos:
       theta_range: [0, 6.2831853]
       num_resets_per_randomize: 1
-      seed: ${seed}
+      seed: 2024
     light:
       diffuse_range: [0.3, 0.8]
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     object_size:
       scale_range: [0.7, 1.6]
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     table_pos:
       x_range: [-0.025, 0.025]
       y_range: [-0.1, 0.1]
       z_range: [-0.08, 0]
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     # ----- Discrete-valued factors ----- #
     floor_texture:
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     object_texture:
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     table_texture:
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     # ----- Factors that overwrite XML ----- #
     # NOTE: Only one of distractor_xml or object_xml can
     #       be enabled at a time.
@@ -109,31 +109,31 @@ env:
       object_ids_range: [0, 100]  # Max: 170
       size_range: [0.3, 0.8]
       theta_range: [0, 6.2831853]
-      num_resets_per_randomize: 5
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     # TODO(lslee): Do not use. Scripted policy cannot pick up
     # the object.
     object_xml:
       object_ids_range: [0, 100]  # Max: 170
       size_range: [0.3, 0.8]
       theta_range: [0, 6.2831853]
-      num_resets_per_randomize: 5
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
 
   # Used to sample factor values for evaluation only.
   eval_factors:
-    # ----- Default factors ----- #
+    # ----- 1 factors ----- #
     arm_pos:
       x_range: [-0.5, 0.5]
       y_range: [-0.2, 0.4]
       z_range: [-0.15, 0.1]
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     object_pos:
-      x_range: [-0.3, 0.3]
-      y_range: [-0.1, 0.2]
+      x_range: [-0.0, 0.0]
+      y_range: [-0.0, 0.0]
       z_range: [-0, 0]
-      theta_range: [0, 6.2831853]
+      theta_range: [0, 0] # 6.2831853]
       num_resets_per_randomize: 1
       seed: ${eval_seed}
     # ----- Continuous-valued factors ----- #
@@ -141,7 +141,7 @@ env:
       azimuth_range: [1.5707963267948966, 2.356194490192345]
       inclination_range: [1.0471975511965976, 1.308996938995747]
       radius_range: [1.25, 1.75]
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     distractor_pos:
       theta_range: [0, 6.2831853]
@@ -149,27 +149,27 @@ env:
       seed: ${eval_seed}
     light:
       diffuse_range: [0.3, 0.8]
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     object_size:
       scale_range: [0.7, 1.6]
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     table_pos:
       x_range: [-0.025, 0.025]
       y_range: [-0.1, 0.1]
       z_range: [-0.08, 0]
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     # ----- Discrete-valued factors ----- #
     floor_texture:
-      num_resets_per_randomize: default
-      seed: ${seed}
+      num_resets_per_randomize: 1
+      seed: 2024
     object_texture:
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     table_texture:
-      num_resets_per_randomize: default
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     # ----- Factors that overwrite XML ----- #
     # NOTE: Only one of distractor_xml or object_xml can
@@ -178,7 +178,7 @@ env:
       object_ids_range: [100, 170]  # Max: 170
       size_range: [0.3, 0.8]
       theta_range: [0, 6.2831853]
-      num_resets_per_randomize: 5
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
     # TODO(lslee): Do not use. Scripted policy cannot pick up
     # the object.
@@ -186,5 +186,5 @@ env:
       object_ids_range: [100, 170]  # Max: 170
       size_range: [0.3, 0.8]
       theta_range: [0, 6.2831853]
-      num_resets_per_randomize: 5
+      num_resets_per_randomize: 1
       seed: ${eval_seed}
