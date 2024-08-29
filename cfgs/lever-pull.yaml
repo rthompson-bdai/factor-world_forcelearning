@@ -62,7 +62,7 @@ env:
       seed: 2024
     object_pos:
       x_range: [-0.1, 0.1]
-      y_range: [-0.05, 0.05]
+      y_range: [-0.1, 0.1]
       z_range: [-0, 0]
       theta_range: [0, 0]
       num_resets_per_randomize: 1
@@ -140,7 +140,7 @@ env:
     camera_pos:
       azimuth_range: [1.5707963267948966, 2.356194490192345]
       inclination_range: [1.0471975511965976, 1.308996938995747]
-      radius_range: [1.25, 1.75]
+      radius_range: [1.75, 2.25]
       num_resets_per_randomize: 1
       seed: ${eval_seed}
     distractor_pos:
@@ -148,7 +148,7 @@ env:
       num_resets_per_randomize: 1
       seed: ${eval_seed}
     light:
-      diffuse_range: [0.3, 0.8]
+      diffuse_range: [0, 0.3]
       num_resets_per_randomize: 1
       seed: ${eval_seed}
     object_size:
@@ -157,7 +157,7 @@ env:
       seed: ${eval_seed}
     table_pos:
       x_range: [-0.025, 0.025]
-      y_range: [-0.1, 0.1]
+      y_range: [-0.2, -0.1]
       z_range: [-0.08, 0]
       num_resets_per_randomize: 1
       seed: ${eval_seed}

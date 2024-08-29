@@ -69,6 +69,7 @@ class FloorTextureWrapper(FactorWrapper):
     mat_id = mujoco_py.cymj._mj_name2id(
         self.model, mujoco_py.cymj._mju_str2Type('material'), 'basic_floor')
     self.unwrapped.model.mat_texid[mat_id] = tex_id
+    self.unwrapped.factors[self.factor_name] = (texture_name,)
 
   def _texture_name2id(self, texture_name: str):
     return mujoco_py.cymj._mj_name2id(

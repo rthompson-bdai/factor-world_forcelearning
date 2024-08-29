@@ -78,6 +78,7 @@ class ObjectTextureWrapper(FactorWrapper):
 
     # Set texture of object
     self.unwrapped.model.mat_texid[mat_id] = tex_id
+    self.unwrapped.factors[self.factor_name] = (self.texture_names[value],)
 
   def _get_tex_id(self, value: int):
     texture_name = self.texture_names[value]

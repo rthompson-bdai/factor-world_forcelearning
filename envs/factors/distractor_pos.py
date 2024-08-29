@@ -112,3 +112,4 @@ class DistractorPosWrapper(FactorWrapper):
     qvel[self.i_qv:self.i_qv + 3] = [0, 0, 0]
 
     self.unwrapped.set_state(qpos, qvel)
+    self.unwrapped.factors[self.factor_name] = (qpos)

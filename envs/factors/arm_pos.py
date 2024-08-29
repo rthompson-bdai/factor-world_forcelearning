@@ -57,6 +57,7 @@ class ArmPosWrapper(FactorWrapper):
       return
 
     self.unwrapped.hand_init_pos[:] = self._default_hand_init_pos + delta_pos
+    self.unwrapped.factors[self.factor_name] = (delta_pos,)
     self.unwrapped._reset_hand()
     self.unwrapped.init_tcp = self.unwrapped.tcp_center
     self.unwrapped.init_left_pad = self.unwrapped.get_body_com('leftpad')

@@ -82,6 +82,8 @@ class TablePosWrapper(FactorWrapper):
       if body_name in self.model.body_names:
         id = self.model.body_name2id(body_name)
         self.unwrapped.model.body_pos[id] = self._default[body_name] + delta_pos
+    
+    self.unwrapped.factors[self.factor_name] = (delta_pos,)
 
     # Change init position of the object.
     obj_init_pos = self._default['obj_init_pos'] + delta_pos

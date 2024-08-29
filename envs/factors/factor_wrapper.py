@@ -105,6 +105,9 @@ class FactorWrapper:
     self._num_resets_per_randomize = num_resets_per_randomize
     self._num_resets = 0
 
+    if not hasattr(self.unwrapped, "factors"):
+      self.unwrapped.factors = {}
+
   @abc.abstractproperty
   def factor_name(self) -> str:
     """String name of the factor."""

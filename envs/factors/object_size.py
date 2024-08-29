@@ -92,3 +92,4 @@ class ObjectSizeWrapper(FactorWrapper):
     for geom_id, geom_size in self._geom_id2size.items():      
       self.unwrapped.model.geom_size[geom_id] = geom_size * value
     # print(self.unwrapped.model.geom_size[46] )
+    self.unwrapped.factors[self.factor_name] = (value,)

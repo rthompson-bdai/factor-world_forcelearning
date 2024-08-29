@@ -61,6 +61,7 @@ class TableTextureWrapper(FactorWrapper):
 
     # Get texture ID
     texture_name = self.texture_names[value]
+    self.unwrapped.factors[self.factor_name] = (texture_name,)
     tex_id = self._texture_name2id(texture_name)
     assert tex_id != -1, f"Could not find texture: {texture_name}"
 
