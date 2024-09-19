@@ -97,6 +97,8 @@ def make_env_with_factors(
     # Need to copy omegaconf into a dict, in order to add new keys to dict.
     env_kwargs = {k: v for k, v in kwargs.items()}
     factor_cls = FACTOR_NAME2CLS[factor_name]
+    if factor_name == "":
+      continue
     if factor_name in ['floor_texture', 'object_texture', 'table_texture']:
       # By default, use all available textures.
       if 'texture_names' not in env_kwargs:

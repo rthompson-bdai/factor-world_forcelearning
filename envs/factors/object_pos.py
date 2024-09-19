@@ -106,7 +106,6 @@ class ObjectPosWrapper(FactorWrapper):
     radians = Rotation.from_quat(self._default_init_quat).as_euler('xyz')
     radians[0] += delta_radians
     self.object_init_quat = Rotation.from_euler('xyz', radians).as_quat()
-
     self.unwrapped.factors[self.factor_name] = (self.object_init_pos, self.object_init_quat)
 
   def _set_object_pos(self, pos: np.ndarray, quat: np.ndarray):

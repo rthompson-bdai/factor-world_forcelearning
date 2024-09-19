@@ -20,6 +20,10 @@
     <sensor>
         <force name="force_ee" site="endEffector"/>
         <torque name="torque_ee" site="endEffector"/>
+        <force name="right_force_ee" site="rightEndEffector"/>
+        <torque name="right_torque_ee" site="rightEndEffector"/>
+        <force name="left_force_ee" site="leftEndEffector"/>
+        <torque name="left_torque_ee" site="leftEndEffector"/>
     </sensor>
 
     <default>

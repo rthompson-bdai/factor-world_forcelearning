@@ -59,5 +59,5 @@ class CameraPosWrapper(FactorWrapper):
         rad * np.cos(theta),
     ])
     self.unwrapped.model.cam_pos[cam_id][:] = pos
-    self.unwrapped.factors[self.factor_name] = (pos)
+    self.unwrapped.factors[self.factor_name] = (phi, theta, rad)
     
