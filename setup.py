@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages, find_namespace_packages
 
 setup(
     name='factor_world',
@@ -8,7 +8,7 @@ setup(
     author='',
     author_email='',
     license='',
-    packages=['factor_world'],
+    packages=find_namespace_packages(),
     install_requires=[],
 
     classifiers=[
