@@ -18,12 +18,12 @@ import copy
 import pickle
 
 from gym.spaces import Box, Dict, Discrete
-import mujoco_py
+import mujoco
 import numpy as np
 
 from factor_world.envs.mujoco_env import MujocoEnv, _assert_task_is_set
 from factor_world.third_party.metaworld.metaworld.envs import reward_utils
-
+from factor_world.binding_utils import MjSim
 
 class SawyerMocapBase(MujocoEnv):
   """
@@ -76,19 +76,20 @@ class SawyerMocapBase(MujocoEnv):
 
   def __setstate__(self, state):
     self.__dict__ = state['state']
-    self.model = mujoco_py.load_model_from_mjb(state['mjb'])
-    self.sim = mujoco_py.MjSim(self.model)
+    self.model = mujoco.load_model_from_mjb(state['mjb'])
+    self.sim = MjSim(self.model)
     self.data = self.sim.data
     self.set_env_state(state['env_state'])
 
   def reset_mocap_welds(self):
     """Resets the mocap welds that we use for actuation."""
     sim = self.sim
+
     if sim.model.nmocap > 0 and sim.model.eq_data is not None:
       for i in range(sim.model.eq_data.shape[0]):
-        if sim.model.eq_type[i] == mujoco_py.const.EQ_WELD:
-          sim.model.eq_data[i, :] = np.array(
-              [0., 0., 0., 1., 0., 0., 0.])
+        if sim.model.eq_type[i] == 1:
+          sim.model.eq_data[i, :7] = np.array(
+              [0., 0., 0., 1., 0., 0., 0.]) #issue is here?
     sim.forward()
 
 
@@ -214,7 +215,7 @@ class SawyerXYZEnv(SawyerMocapBase):
         self.mocap_high,
     )
     self.data.set_mocap_pos('mocap', new_mocap_pos)
-    self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
+    self.data.set_mocap_quat('mocap', np.array([0,1,0,1]))
 
   def discretize_goal_space(self, goals):
     assert False
@@ -231,7 +232,7 @@ class SawyerXYZEnv(SawyerMocapBase):
     self.set_state(qpos, qvel)
 
   def _get_site_pos(self, siteName):
-    _id = self.model.site_names.index(siteName)
+    _id = self.sim.model.site_names.index(siteName)
     return self.data.site_xpos[_id].copy()
 
   def _set_pos_site(self, name, pos):
@@ -543,8 +544,8 @@ class SawyerXYZEnv(SawyerMocapBase):
 
   def _reset_hand(self, steps=50):
     for _ in range(steps):
-      self.data.set_mocap_pos('mocap', self.hand_init_pos)
-      self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
+      #self.data.set_mocap_pos('mocap', self.hand_init_pos)
+      #self.data.set_mocap_quat('mocap', np.array([0,1,0,1]))
       self.do_simulation([-1, 1], self.frame_skip)
     self.init_tcp = self.tcp_center
 

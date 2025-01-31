@@ -16,7 +16,7 @@ from typing import List
 
 import gym
 from gym import spaces
-import mujoco_py
+import mujoco
 import numpy as np
 
 from factor_world.envs.factors.factor_wrapper import FactorWrapper
@@ -62,8 +62,8 @@ class ObjectTextureWrapper(FactorWrapper):
     tex_id = self._get_tex_id(value)
 
     # Make sure texture is different from table texture.
-    table_mat_id = mujoco_py.cymj._mj_name2id(
-        self.model, mujoco_py.cymj._mju_str2Type('material'), 'table_wood')
+    table_mat_id = mujoco.cymj._mj_name2id(
+        self.model, mujoco.cymj._mju_str2Type('material'), 'table_wood')
     while tex_id == self.model.mat_texid[table_mat_id]:
       value = (value + 1) % len(self.texture_names)
       tex_id = self._get_tex_id(value)
@@ -72,8 +72,8 @@ class ObjectTextureWrapper(FactorWrapper):
       mat_name = f'material_0_{self.object_name}'
     else:
       mat_name = 'block_wood'
-    mat_id = mujoco_py.cymj._mj_name2id(
-        self.model, mujoco_py.cymj._mju_str2Type('material'), mat_name)
+    mat_id = mujoco.cymj._mj_name2id(
+        self.model, mujoco.cymj._mju_str2Type('material'), mat_name)
     assert mat_id != -1, mat_name
 
     # Set texture of object
@@ -85,5 +85,5 @@ class ObjectTextureWrapper(FactorWrapper):
     return self._texture_name2id(texture_name)
 
   def _texture_name2id(self, texture_name: str):
-    return mujoco_py.cymj._mj_name2id(
-        self.model, mujoco_py.cymj._mju_str2Type('texture'), texture_name)
+    return mujoco.cymj._mj_name2id(
+        self.model, mujoco.cymj._mju_str2Type('texture'), texture_name)

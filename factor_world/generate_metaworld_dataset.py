@@ -11,10 +11,7 @@ import h5py
 from PIL import Image
 from copy import copy
 import shutil
-import sys
-sys.path.insert(0,'/workspaces/bdai/projects/foundation_models/src/force_learning')
-
-from ibrl_forcelearning.env.vpl_metaworld_wrapper import VPLMetaWorld
+from vpl_metaworld_wrapper import VPLMetaWorld
 import yaml
 
 
@@ -66,16 +63,10 @@ def run(cfg):
     env_cfg_json_dict["env_kwargs"] = env_kwargs
     with open(os.path.join(cfg.output_path, "env_cfg.json"), "w") as f:
         json.dump(env_cfg_json_dict, f)
-
     
 
     # Make an instance of the environment
     env = VPLMetaWorld(**env_kwargs)
-
-
-    #PAUSE HERE
-
-
 
     list_ep_dict = []
     list_ep_dict_np = []
@@ -105,7 +96,6 @@ def run(cfg):
             rl_obs, reward, terminal, _, _ = env.step(heuristic_action)
 
             for key in rl_obs.keys():
-                print(key)
                 if key not in ep_dict.keys():
                     ep_dict[f"{key}"] = [rl_obs[key].cpu().numpy()]
                 else:
@@ -131,21 +121,18 @@ def run(cfg):
             if "color" in key:
                 ep_dict_np[key] = np.array(ep_dict[key], dtype=np.uint8)
  
-        #f.create_dataset("color", data=np.array(ep_dict["color"]))
         list_ep_dict.append(ep_dict)
         list_ep_dict_np.append(ep_dict_np)
 
-        # if ep < cfg.save_gifs:
-        #     print("Saving gif...")
-        #     gif_output_file = os.path.join(cfg.output_path, f"episode_{ep}.gif")
-        #     camera_name = cfg.env_cfg.rl_camera
-        #     images = ep_dict_np["color"].transpose((0, 2, 3, 1))
-        #     print(images.shape)
-        #     exit(0)
-        #     images = [Image.fromarray(img[:, :, -3:]) for img in images]
-        #     images[0].save(
-        #         gif_output_file, save_all=True, append_images=images[1:], duration=50, loop=0
-        #     )
+        if ep < cfg.save_gifs:
+            print("Saving gif...")
+            gif_output_file = os.path.join(cfg.output_path, f"episode_{ep}.gif")
+            camera_name = cfg.env_cfg.rl_camera
+            images = ep_dict_np["color"].transpose((0, 2, 3, 1))
+            images = [Image.fromarray(img[:, :, -3:]) for img in images]
+            images[0].save(
+                gif_output_file, save_all=True, append_images=images[1:], duration=50, loop=0
+            )
         f.close()
         metadata ={"num_timesteps": n_steps, "num_episodes": len(n_steps), }
 

@@ -1,5 +1,37 @@
 # Decomposing the Generalization Gap in Imitation Learning for Visual Robotic Manipulation
 
+This is a modification of the factor-world repo packaged and wrapped to resemble the robomimic interface for compatibility with a wider range of experiments. 
+
+Environments consist of a base task and a set of 'factor' wrappers for varying that factor at every new episode
+
+Each factor also has a configuration file with a 'train' and 'test' set of parameters ranges to evaluate performance outside of training context. 
+
+The factor wrappers in this repo that work for all environments are: 
+
+
+To install:
+
+git clone
+
+cd 
+pip install .
+
+Additional dependencies:
+gym
+mujoco-py
+mujoco
+
+To generate data in an environment:
+
+This produces a folder 
+
+To load that environment:
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 This is the official codebase for the [paper](https://sites.google.com/view/generalization-gap):
 ```
 @misc{xie2023decomposing,

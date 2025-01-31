@@ -16,7 +16,7 @@ from typing import List
 
 import gym
 from gym import spaces
-import mujoco_py
+import mujoco
 import numpy as np
 
 from factor_world.envs.factors.factor_wrapper import FactorWrapper
@@ -66,11 +66,11 @@ class FloorTextureWrapper(FactorWrapper):
     assert tex_id != -1, f"Could not find texture: {texture_name}"
 
     # Set texture of table
-    mat_id = mujoco_py.cymj._mj_name2id(
-        self.model, mujoco_py.cymj._mju_str2Type('material'), 'basic_floor')
+    mat_id = mujoco.cymj._mj_name2id(
+        self.model, mujoco.cymj._mju_str2Type('material'), 'basic_floor')
     self.unwrapped.model.mat_texid[mat_id] = tex_id
     self.unwrapped.factors[self.factor_name] = (texture_name,)
 
   def _texture_name2id(self, texture_name: str):
-    return mujoco_py.cymj._mj_name2id(
-        self.model, mujoco_py.cymj._mju_str2Type('texture'), texture_name)
+    return mujoco.cymj._mj_name2id(
+        self.model, mujoco.cymj._mju_str2Type('texture'), texture_name)

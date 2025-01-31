@@ -5,25 +5,11 @@ import numpy as np
 import collections
 import h5py
 
-
-# try:
 import gym
 import metaworld
 import metaworld.policies
 from factor_world.envs.env_dict import ALL_V2_ENVIRONMENTS_GOAL_HIDDEN, ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE
 from factor_world.wrappers import make_env_with_factors
-
-# except Exception as e:
-#     sys.path.append('/workspaces/bdai/projects/foundation_models/src/force_learning/factor-world_forcelearning')
-#     import gym
-#     import metaworld
-#     import metaworld.policies
-#     from envs.env_dict import ALL_V2_ENVIRONMENTS_GOAL_HIDDEN, ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE
-#     from wrappers import make_env_with_factors
-
-#     print("warning: failed to import metaworld")
-#     print("========================================", e)
-#     print("========================================")
 
 
 GOOD_CAMERAS = {
@@ -238,6 +224,7 @@ class ProprioObsWrapper(gym.Wrapper):
         self.norm = norm
         
         if self.use_force and self.norm:
+            # Past data needs to be provided to calculate the mean and std for normalization
             assert norm_dataset is not None
             f = h5py.File(norm_dataset, "r")
             demos = list(f["data"].keys())
@@ -262,8 +249,6 @@ class ProprioObsWrapper(gym.Wrapper):
             self.force_std= np.array([1,1,1])
             self.torque_std = np.array([1,1,1])
 
-        print(self.force_mean, self.torque_mean)
-
 
     def _get_force_data(self):
         sensor_idx = np.sum(self.model.sensor_dim[: self.model.sensor_name2id("force_ee")])
@@ -278,7 +263,7 @@ class ProprioObsWrapper(gym.Wrapper):
                                (torque_data - self.torque_mean)/self.torque_std], axis=0)
 
     def _modify_observation(self, obs): 
-        #obs["prop"] = {}  
+        # modified to look like robomimic format observations 
         obs["robot0_eef_pos"] = np.take(obs["state"], self.idx_list[:3])
         obs["robot0_gripper_qpos"] = np.take(obs["state"], self.idx_list[3:])
         
@@ -552,16 +537,11 @@ class VPLMetaWorld:
         # - Logic for frame stacking is handled in StackWrapper
 
         state = None
-        #if self.use_state:
         state = torch.from_numpy(obs["state"]).to(self.device)
-
-        #prop = torch.from_numpy(obs["prop"]).to(self.device)
-
         rl_image_obs = None
         all_image_obs = {}
         for camera_name in self.camera_names:
             image_key = f"{camera_name}_image"
-            #print(obs.keys())
             image_obs = torch.from_numpy(obs[image_key].copy())
 
             # keep the high-res version for rendering

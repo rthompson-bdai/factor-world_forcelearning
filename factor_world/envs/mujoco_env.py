@@ -21,9 +21,9 @@ import warnings
 import glfw
 import gym
 from gym.utils import seeding
-import mujoco_py
+import mujoco
 import numpy as np
-
+from factor_world.binding_utils import MjSim, MjSimState, MjRenderContext
 
 def _assert_task_is_set(func):
   def inner(*args, **kwargs):
@@ -55,9 +55,10 @@ class MujocoEnv(gym.Env):
       raise IOError("File %s does not exist" % model_path)
 
     self.frame_skip = frame_skip
-    self.model = mujoco_py.load_model_from_path(model_path)
-    self.sim = mujoco_py.MjSim(self.model)
+    self.model = mujoco.MjModel.from_xml_path(model_path)
+    self.sim = MjSim(self.model)
     self.data = self.sim.data
+    self.render_context = MjRenderContext(self.sim, offscreen=True, )
     self.viewer = None
     self._viewers = {}
 
@@ -111,8 +112,8 @@ class MujocoEnv(gym.Env):
   def set_state(self, qpos, qvel):
     assert qpos.shape == (self.model.nq,) and qvel.shape == (self.model.nv,)
     old_state = self.sim.get_state()
-    new_state = mujoco_py.MjSimState(old_state.time, qpos, qvel,
-                                     old_state.act, old_state.udd_state)
+    new_state = MjSimState(old_state.time, qpos, qvel,)
+                                     #old_state.act, old_state.udd_state)
     self.sim.set_state(new_state)
     self.sim.forward()
 
@@ -134,26 +135,38 @@ class MujocoEnv(gym.Env):
     for _ in range(n_frames):
       try:
         self.sim.step()
-      except mujoco_py.MujocoException as err:
+      except mujoco.MujocoException as err:
         warnings.warn(str(err), category=RuntimeWarning)
         self._did_see_sim_exception = True
 
   def render(self, offscreen=False, camera_name="corner2",
              resolution=(640, 480)):
-    assert_string = (
-      "camera_name should be one of corner3, corner, corner2, topview, "
-      "gripperPOV, behindGripper", "movable")
-    assert camera_name in {
-      "corner3", "corner", "corner2", "topview", "gripperPOV", "behindGripper",
-      "movable"}, assert_string
-    if not offscreen:
-      self._get_viewer('human').render()
-    else:
-      return self.sim.render(
-          *resolution,
-          mode='offscreen',
-          camera_name=camera_name
-      )
+    # for i in range(self.sim.model.ncam):
+    #         name = mujoco.mj_id2name(self.sim.model._model, 
+    #                                  mujoco.mjtObj.mjOBJ_CAMERA, i)
+    #         print(name)
+    #         print(i)
+    #         print()
+
+    self.render_context.render(resolution[0], resolution[1], self.sim.model.camera_name2id(camera_name))
+    img = self.render_context.read_pixels(resolution[0], resolution[1], depth=False, segmentation=False)
+    return img
+    
+
+    # assert_string = (
+    #   "camera_name should be one of corner3, corner, corner2, topview, "
+    #   "gripperPOV, behindGripper", "movable")
+    # assert camera_name in {
+    #   "corner3", "corner", "corner2", "topview", "gripperPOV", "behindGripper",
+    #   "movable"}, assert_string
+    # if not offscreen:
+    #   self._get_viewer('human').render()
+    # else:
+    #   return self.sim.render(
+    #       *resolution,
+    #       mode='offscreen',
+    #       camera_name=camera_name
+    #   )
 
   def close(self):
     if self.viewer is not None:
@@ -164,7 +177,7 @@ class MujocoEnv(gym.Env):
     self.viewer = self._viewers.get(mode)
     if self.viewer is None:
       if mode == 'human':
-        self.viewer = mujoco_py.MjViewer(self.sim)
+        self.viewer = mujoco.MjViewer(self.sim)
       self.viewer_setup()
       self._viewers[mode] = self.viewer
     self.viewer_setup()

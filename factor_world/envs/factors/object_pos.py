@@ -50,23 +50,12 @@ class ObjectPosWrapper(FactorWrapper):
       #joint_name = f"joint_{self.object_name}"
     else:
       self.body_name = 'obj'
-      #joint_name = 'objjoint'
-    # print(dir(self.model))
-    # print(self.model.body_jntnum)
-    # print(self.model.body_jntadr[self.model.body_name2id('basketball')])
-    # exit(0)
 
-    print(self.body_name)
     if self.body_name not in self.model.body_names:
       print(f"WARNING(object_pos): Body {body_name} not found.")
       self.object_init_pos = None
       self.object_init_quat = None
     else:
-      # Store object qpos/qvel indices
-      # self.i_qp = self.model.get_joint_qpos_addr(joint_name)[0]
-      # self.i_qv = self.model.get_joint_qvel_addr(joint_name)[0]
-
-      # qpos = self.data.qpos.flat.copy()
       self._default_init_pos = self.unwrapped.init_config['obj_init_pos']
       self._default_init_quat = self.model.body_quat[self.model.body_name2id(self.body_name)]
 
@@ -80,11 +69,6 @@ class ObjectPosWrapper(FactorWrapper):
     self._set_object_pos(
         self.object_init_pos,
         self.object_init_quat)
-
-    #print(self.model.body_pos[self.model.body_name2id(self.body_name)] )
-    #self.reset_model()
-
-    #print(self.model.body_pos[self.model.body_name2id(self.body_name)] )
 
     return self.unwrapped._get_obs()
 
@@ -120,13 +104,3 @@ class ObjectPosWrapper(FactorWrapper):
     self.unwrapped.model.body_quat[self.model.body_name2id(self.body_name)] = quat
 
     self.reset_model()
-
-    # qpos = self.data.qpos.flat.copy()
-    # qvel = self.data.qvel.flat.copy()
-
-    # qpos[self.i_qp:self.i_qp + 3] = pos
-    # qpos[self.i_qp + 3:self.i_qp + 7] = quat
-    # qvel[self.i_qv:self.i_qv + 3] = [0, 0, 0]
-
-
-    # self.set_state(qpos, qvel)

@@ -227,10 +227,15 @@ class FactorWrapper:
   @property
   def unwrapped(self):
     return self.env.unwrapped
+  
+  @property
+  def sim(self):
+    return self.env.sim
 
   @property
   def model(self):
-    return self.env.model
+    return self.env.sim.model
+  
 
   def _get_obs(self):
     return self.env._get_obs()
