@@ -1,3 +1,2 @@
-mujoco==2.3.2
-mujoco-py
+mujoco
 gym
