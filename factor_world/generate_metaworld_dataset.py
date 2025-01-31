@@ -11,9 +11,6 @@ import h5py
 from PIL import Image
 from copy import copy
 import shutil
-import sys
-sys.path.insert(0,'/workspaces/bdai/projects/foundation_models/src/force_learning')
-
 from ibrl_forcelearning.env.vpl_metaworld_wrapper import VPLMetaWorld
 import yaml
 
