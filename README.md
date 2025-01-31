@@ -13,7 +13,9 @@ To install, after cloning the repo:
 `cd factor-world_forcelearning`
 `pip install -e .`
 
-You may also have to `pip` install metaworld, gym, and mujoco_py as dependencies.
+You may also have to `pip` install gym, and mujoco_py as dependencies, and metaworld:
+`pip install git+https://github.com/Farama-Foundation/Metaworld.git@master#egg=metaworld`
+
 
 To generate data in environments, run `shell_scripts\datagen_factors.sh`
 
